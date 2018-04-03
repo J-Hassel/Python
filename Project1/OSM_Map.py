@@ -31,6 +31,9 @@ class OSM_Map:
                     for nd in way.findall("nd"):
                         self.highway[way.get("id")].append(nd.get("ref"))
 
+
+
+    def Route(self, src, dest):
         # list of tuples to represent undirected edges in the graph
         edges = []
         for hw in self.highway:
@@ -38,13 +41,11 @@ class OSM_Map:
                 edges.append((self.node[self.highway[hw][i]].id, self.node[self.highway[hw][i + 1]].id))
 
         # creating graph
-        self.G = nx.Graph()
-        self.G.add_edges_from(edges)
+        G = nx.Graph()
+        G.add_edges_from(edges)
 
-
-    def Route(self, src, dest):
-        if nx.has_path(self.G, int(src), int(dest)):
-            path = nx.shortest_path(self.G, int(src), int(dest))
+        if nx.has_path(G, int(src), int(dest)):
+            path = nx.shortest_path(G, int(src), int(dest))
             print(path)
 
 
