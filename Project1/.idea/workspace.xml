@@ -26,8 +26,8 @@
       <file leaf-file-name="OSM_Map.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/OSM_Map.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="78" column="63" lean-forward="true" selection-start-line="78" selection-start-column="63" selection-end-line="78" selection-end-column="63" />
+            <state relative-caret-position="331">
+              <caret line="78" column="49" selection-start-line="78" selection-start-column="49" selection-end-line="78" selection-end-column="49" />
               <folding>
                 <element signature="e#23#44#0" expanded="true" />
               </folding>
@@ -67,6 +67,7 @@
       <find>2546755698</find>
       <find>-89.94</find>
       <find>-89.9496747</find>
+      <find>print</find>
       <find>highway</find>
     </findStrings>
   </component>
@@ -291,8 +292,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OSM_Map.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="78" column="63" lean-forward="true" selection-start-line="78" selection-start-column="63" selection-end-line="78" selection-end-column="63" />
+        <state relative-caret-position="331">
+          <caret line="78" column="49" selection-start-line="78" selection-start-column="49" selection-end-line="78" selection-end-column="49" />
           <folding>
             <element signature="e#23#44#0" expanded="true" />
           </folding>

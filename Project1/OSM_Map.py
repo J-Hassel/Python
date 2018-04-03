@@ -65,20 +65,24 @@ class OSM_Map:
 
 
     def Save(self, imgName):
-        bg, hw, r = 255, 150, 50
+        bg_color, hw_color, route_color = 255, 150, 50
 
-        img = Image.new('L', (self.width, self.height), color=bg)  #creating image
+        img = Image.new('L', (self.width, self.height), color=bg_color)  #creating image
         draw = ImageDraw.Draw(img)
 
-        points = self.convertEdgesToPoints()
-#        print(coords)
-        #draw highways
-#        for node in self.G:
-#            print(node)
-        #should do this for every separate hw
-        ImageDraw.ImageDraw.line(draw, points, fill=r, width=5)
 
-        img = ImageOps.mirror(img)
+        for hw in self.highway:
+            hwEdges = []
+            for i in range(len(self.highway[hw]) - 1):
+                hwEdges.append((self.index[self.highway[hw][i]], self.index[self.highway[hw][i + 1]]))
+
+            points = self.convertEdgesToPoints(hwEdges)
+
+            #draws edges for every separate highway
+            ImageDraw.ImageDraw.line(draw, points, fill=hw_color, width=10)
+
+
+        img = ImageOps.mirror(img)  #flips image to correct orientation
         img.save(imgName)   #saving image
 
 
@@ -86,23 +90,22 @@ class OSM_Map:
         width = max_x - min_x
         height = max_y - min_y
         scaling = 1
-#        yScaling = 1
 
         while True:
             width *= 1.1
             height *= 1.1
             scaling *= 1.1
 
-            if width * 1.1 > 4990 or height *1.1 > 4990:
+            if width * 1.1 > 4990 or height * 1.1 > 4990:
                 break
 
         return int(round(width) + 10), int(round(height) + 10), scaling
 
 
-    def convertEdgesToPoints(self):
+    def convertEdgesToPoints(self, data):
         coords = []
-        XY = []
-        for edge in self.edges:
+        points = []
+        for edge in data:
             nd1, nd2 = edge[0], edge[1]
 
             nd1 = float(self.node[self.indexToID[nd1]][0]), float(self.node[self.indexToID[nd1]][1])
@@ -112,9 +115,7 @@ class OSM_Map:
 
         for coord in coords:
             x, y = int((self.max_x - coord[1]) * self.scaling), int((self.max_y - coord[0]) * self.scaling)
-            XY.append((x, y))
+            points.append((x, y))
 
-        print(XY)
-
-        return XY
+        return points
 
