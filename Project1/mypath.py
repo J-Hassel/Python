@@ -4,11 +4,10 @@ from OSM_Map import OSM_Map as Map
 import sys
 
 arguments = sys.argv
-start = Node(arguments[1])
-finish = Node(arguments[2])
+src = Node(arguments[1])
+dest = Node(arguments[2])
 
-route = Map()
+map = Map("map2.osm")
 
-path = route.plot_route(start.id, finish.id)
-print(path)
-route.save()
+img = map.Route(src.id, dest.id)
+map.Save("test.pgm")
