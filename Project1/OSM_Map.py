@@ -75,8 +75,7 @@ class OSM_Map:
         img.save(img_name)   #saving image
 
 
-    @staticmethod
-    def getImgInfo(min_x, max_x, min_y, max_y):
+    def getImgInfo(self, min_x, max_x, min_y, max_y):
         width = max_x - min_x
         height = max_y - min_y
         scaling = 1
