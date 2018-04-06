@@ -21,7 +21,6 @@ class OSM_Map:
         for element in doc.findall("node"):
             self.node[element.get("id")] = Node(int(element.get("id")), float(element.get("lat")), float(element.get("lon")))
 
-
         # storing all highways in a dictionary. {'highway ID': ['list', 'of', 'nodes', 'in', 'highway']}
         self.highway = {}
         for way in doc.findall("way"):
@@ -30,6 +29,7 @@ class OSM_Map:
                     self.highway[way.get("id")] = []
                     for nd in way.findall("nd"):
                         self.highway[way.get("id")].append(nd.get("ref"))
+
         #starting with empty path
         self.path = []
 
@@ -45,6 +45,7 @@ class OSM_Map:
         graph = nx.Graph()
         graph.add_edges_from(edges)
 
+        # getting the shortest path between the two nodes
         if nx.has_path(graph, int(src), int(dest)):
             self.path = nx.shortest_path(graph, int(src), int(dest))
             return self.path
@@ -53,7 +54,7 @@ class OSM_Map:
 
 
     def Save(self, img_name):
-        bg_color, hw_color, route_color = 255, 150, 50
+        bg_color, hw_color, route_color = 255, 150, 50  # colors
 
         img = Image.new('L', (self.width, self.height), color=bg_color)  #creating image
         draw = ImageDraw.Draw(img)
@@ -67,11 +68,12 @@ class OSM_Map:
             points = self.convertEdgesToPoints(hw_edges)
             ImageDraw.ImageDraw.line(draw, points, fill=hw_color, width=10)
 
-        # draws route
+        # getting the path edges to draw
         path_edges = []
         for i in range(len(self.path) - 1):
             path_edges.append((self.path[i], self.path[i + 1]))
 
+        # converting edges to points, drawing lines between the points
         points = self.convertEdgesToPoints(path_edges)
         ImageDraw.ImageDraw.line(draw, points, fill=route_color, width=10)
 
@@ -80,6 +82,7 @@ class OSM_Map:
 
 
     def getImgInfo(self, min_x, max_x, min_y, max_y):
+        # getting the maximum size image, with 10px padding
         width = max_x - min_x
         height = max_y - min_y
         scaling = 1
@@ -103,12 +106,12 @@ class OSM_Map:
             nd1, nd2 = str(edge[0]), str(edge[1])
 
             nd1 = self.node[nd1].lon, self.node[nd1].lat
-            coordinates.append(nd1)
+            coordinates.append(nd1)     # appending tuple of nd1's coordinates to coordinates list
             nd2 = self.node[nd2].lon, self.node[nd2].lat
-            coordinates.append(nd2)
+            coordinates.append(nd2)     # appending tuple of nd2's coordinates to coordinates list
 
-        for coord in coordinates:
+        for coord in coordinates:       # appending points(x, y) for the appropriately sized image
             x, y = int((self.max_x - coord[0]) * self.scaling), int((self.max_y - coord[1]) * self.scaling)
             points.append((x, y))
 
-        return points
+        return points   # returning the list of points we want to draw lines between
