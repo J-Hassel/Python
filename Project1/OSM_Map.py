@@ -14,7 +14,7 @@ class OSM_Map:
         min_x, self.max_x = float(doc.find("bounds").get("minlon")), float(doc.find("bounds").get("maxlon"))
         min_y, self.max_y = float(doc.find("bounds").get("minlat")), float(doc.find("bounds").get("maxlat"))
 
-        self.width, self.height, self.scaling = self.getImgInfo(min_x, self.max_x, min_y, self.max_y)
+        self.width, self.height, self.scaling = self.getImgInfo(min_x, self.max_x, min_y, self.max_y)   #getting image dimensions and scaling
 
         # stores all nodes in a dictionary. {'node ID': <Node Object>}
         self.node = {}
@@ -34,7 +34,6 @@ class OSM_Map:
         self.path = []
 
 
-
     def Route(self, src, dest):
         # list of tuples to represent undirected edges in the graph
         edges = []
@@ -43,11 +42,11 @@ class OSM_Map:
                 edges.append((self.node[self.highway[hw][i]].id, self.node[self.highway[hw][i + 1]].id))
 
         # creating graph
-        G = nx.Graph()
-        G.add_edges_from(edges)
+        graph = nx.Graph()
+        graph.add_edges_from(edges)
 
-        if nx.has_path(G, int(src), int(dest)):
-            self.path = nx.shortest_path(G, int(src), int(dest))
+        if nx.has_path(graph, int(src), int(dest)):
+            self.path = nx.shortest_path(graph, int(src), int(dest))
             return self.path
         else:
             print("No path exists.")
@@ -74,7 +73,7 @@ class OSM_Map:
             path_edges.append((self.path[i], self.path[i + 1]))
 
         points = self.convertEdgesToPoints(path_edges)
-        ImageDraw.ImageDraw.line(draw, points, fill=route_color, width=5)
+        ImageDraw.ImageDraw.line(draw, points, fill=route_color, width=10)
 
         img = ImageOps.mirror(img)  #flips image to correct orientation
         img.save(img_name)   #saving image
