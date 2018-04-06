@@ -36,7 +36,7 @@ class OSM_Map:
 
     def Route(self, src, dest):
         # list of tuples to represent undirected edges in the graph
-        edges = []
+        edges = []      # ex. [(id1, id2), (id2, id3), (id3, id4)] : id1 --> id4
         for hw in self.highway:
             for i in range(len(self.highway[hw]) - 1):
                 edges.append((self.node[self.highway[hw][i]].id, self.node[self.highway[hw][i + 1]].id))
@@ -61,7 +61,7 @@ class OSM_Map:
 
         # draws edges for every separate highway
         for hw in self.highway:
-            hw_edges = []
+            hw_edges = []   # ex. [(id1, id2), (id2, id3), (id3, id4)] : id1 --> id4
             for i in range(len(self.highway[hw]) - 1):
                 hw_edges.append((self.node[self.highway[hw][i]].id, self.node[self.highway[hw][i + 1]].id))
 
@@ -69,7 +69,7 @@ class OSM_Map:
             ImageDraw.ImageDraw.line(draw, points, fill=hw_color, width=10)
 
         # getting the path edges to draw
-        path_edges = []
+        path_edges = []     # ex. [(id1, id2), (id2, id3), (id3, id4)] : id1 --> id4
         for i in range(len(self.path) - 1):
             path_edges.append((self.path[i], self.path[i + 1]))
 
@@ -99,8 +99,8 @@ class OSM_Map:
 
 
     def convertEdgesToPoints(self, data):
-        coordinates = []
-        points = []
+        coordinates = []    # ex. [(nd1_lon, nd1_lat), (nd2_lon, nd2_lat), (nd2_lon, nd2_lat), (nd3_lon, nd3_lat)] : nd1 --> nd3
+        points = []         # ex. [(w, x), (x, y), (x, y), (y, z)] : w --> z
 
         for edge in data:
             nd1, nd2 = str(edge[0]), str(edge[1])
@@ -114,4 +114,5 @@ class OSM_Map:
             x, y = int((self.max_x - coord[0]) * self.scaling), int((self.max_y - coord[1]) * self.scaling)
             points.append((x, y))
 
+        print(points)
         return points   # returning the list of points we want to draw lines between
