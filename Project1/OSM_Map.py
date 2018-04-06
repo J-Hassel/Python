@@ -114,5 +114,4 @@ class OSM_Map:
             x, y = int((self.max_x - coord[0]) * self.scaling), int((self.max_y - coord[1]) * self.scaling)
             points.append((x, y))
 
-        print(points)
         return points   # returning the list of points we want to draw lines between
