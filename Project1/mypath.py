@@ -2,9 +2,14 @@
 from OSM_Map import OSM_Map as Map
 import sys
 
+#command line arguments
 arguments = sys.argv
+node_id1 = arguments[1]
+node_id2 = arguments[2]
+input_filename = arguments[3]
+output_filename = arguments[4]
 
-my_map = Map("map2.osm")
+my_map = Map(input_filename)
 
-img = my_map.Route(arguments[1], arguments[2])
-my_map.Save("test.pgm")
+my_map.Route(node_id1, node_id2)
+my_map.Save(output_filename)

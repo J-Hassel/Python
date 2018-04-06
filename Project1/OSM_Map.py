@@ -16,7 +16,7 @@ class OSM_Map:
 
         self.width, self.height, self.scaling = self.getImgInfo(min_x, self.max_x, min_y, self.max_y)
 
-        # stores all nodes in a dictionary. {'node ID': ('lat', 'lon')}
+        # stores all nodes in a dictionary. {'node ID': <Node Object>}
         self.node = {}
         for element in doc.findall("node"):
             self.node[element.get("id")] = Node(int(element.get("id")), float(element.get("lat")), float(element.get("lon")))
@@ -30,6 +30,8 @@ class OSM_Map:
                     self.highway[way.get("id")] = []
                     for nd in way.findall("nd"):
                         self.highway[way.get("id")].append(nd.get("ref"))
+        #starting with empty path
+        self.path = []
 
 
 
@@ -45,11 +47,8 @@ class OSM_Map:
         G.add_edges_from(edges)
 
         if nx.has_path(G, int(src), int(dest)):
-            path = nx.shortest_path(G, int(src), int(dest))
-            print(path)
-
-
-            # print(list(nx.bfs_edges(G, 1)))
+            self.path = nx.shortest_path(G, int(src), int(dest))
+            return self.path
         else:
             print("No path exists.")
 
@@ -67,9 +66,15 @@ class OSM_Map:
                 hw_edges.append((self.node[self.highway[hw][i]].id, self.node[self.highway[hw][i + 1]].id))
 
             points = self.convertEdgesToPoints(hw_edges)
-
             ImageDraw.ImageDraw.line(draw, points, fill=hw_color, width=10)
 
+        # draws route
+        path_edges = []
+        for i in range(len(self.path) - 1):
+            path_edges.append((self.path[i], self.path[i + 1]))
+
+        points = self.convertEdgesToPoints(path_edges)
+        ImageDraw.ImageDraw.line(draw, points, fill=route_color, width=5)
 
         img = ImageOps.mirror(img)  #flips image to correct orientation
         img.save(img_name)   #saving image
@@ -92,17 +97,18 @@ class OSM_Map:
 
 
     def convertEdgesToPoints(self, data):
-        coords = []
+        coordinates = []
         points = []
+
         for edge in data:
             nd1, nd2 = str(edge[0]), str(edge[1])
 
             nd1 = self.node[nd1].lon, self.node[nd1].lat
-            coords.append(nd1)
+            coordinates.append(nd1)
             nd2 = self.node[nd2].lon, self.node[nd2].lat
-            coords.append(nd2)
+            coordinates.append(nd2)
 
-        for coord in coords:
+        for coord in coordinates:
             x, y = int((self.max_x - coord[0]) * self.scaling), int((self.max_y - coord[1]) * self.scaling)
             points.append((x, y))
 
