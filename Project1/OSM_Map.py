@@ -88,12 +88,13 @@ class OSM_Map:
         scaling = 1
 
         while True:
+            if width * 1.1 > 4990 or height * 1.1 > 4990:
+                break
+                
             width *= 1.1
             height *= 1.1
             scaling *= 1.1
 
-            if width * 1.1 > 4990 or height * 1.1 > 4990:
-                break
 
         return int(round(width) + 10), int(round(height) + 10), scaling
 
