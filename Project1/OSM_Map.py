@@ -46,11 +46,11 @@ class OSM_Map:
         graph.add_edges_from(edges)
 
         # getting the shortest path between the two nodes
-        if nx.has_path(graph, int(src), int(dest)):
+        try:
             self.path = nx.shortest_path(graph, int(src), int(dest))
             return self.path
-        else:
-            print("No path exists.")
+        except nx.NodeNotFound as e:
+            print(str(e)[:-4] + "a valid node.")
 
 
     def Save(self, img_name):
